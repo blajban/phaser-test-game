@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import ExampleScene from './scenes/ExampleScene';
+import MainScene from './scenes/MainScene';
 
 if (window.game) {
   console.log('Game already initialized');
@@ -8,7 +8,7 @@ if (window.game) {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: [ ExampleScene ],
+    scene: [ MainScene ],
     physics: {
       default: 'arcade',
       arcade: {

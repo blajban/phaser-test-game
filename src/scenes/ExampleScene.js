@@ -29,7 +29,7 @@ class ExampleScene extends Phaser.Scene {
     particles.startFollow(logo);
   }
 
-  update(dt) {
+  update(time, delta) {
 
   }
 }
