@@ -6,13 +6,14 @@ export default class Player {
     this.scene = scene;
     this.x = x;
     this.y = y;
+    this.radius = 20;
 
     this.cannonLength = 40;
     this.cannonWidth = 10;
 
     this.weapon = new Weapon(this.scene, 100, 5, 0xffff00, 3);
 
-    this.circle = this.scene.add.circle(this.x, this.y, 20, 0xff0000);
+    this.circle = this.scene.add.circle(this.x, this.y, this.radius, 0xff0000);
     this.cannon = this.scene.add.graphics();
 
     this.scene.input.on('pointerdown', () => {
