@@ -48,12 +48,12 @@ export default class ComponentStore {
     this.#componentTypes = new Map();
   }
 
-  addComponent(entity, componentType, component) {
-    if (!this.#componentTypes.has(componentType)) {
-      this.#componentTypes.set(componentType, new ComponentMap(componentType));
+  addComponent(entity, component) {
+    if (!this.#componentTypes.has(component.type)) {
+      this.#componentTypes.set(component.type, new ComponentMap(component.type));
     }
 
-    const componentMap = this.#componentTypes.get(componentType);
+    const componentMap = this.#componentTypes.get(component.type);
     componentMap.add(entity, component);
   }
 
