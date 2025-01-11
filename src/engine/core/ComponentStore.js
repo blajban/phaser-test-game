@@ -19,6 +19,7 @@ class ComponentMap {
   }
 
   get(entity) {
+
     if (!this.has(entity)) {
       throw new Error(`Could not find component of type ${this.#componentType} for entity ${entity}`);
 

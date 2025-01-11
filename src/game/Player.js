@@ -1,48 +1,48 @@
-import Phaser from "phaser";
-import Weapon from "./Weapon";
 
-export default class Player {
-  constructor(scene, x, y) {
+import System from "../engine/systems/System";
+import { Component, Transform, CircleShape, RectShape, ComponentTypes } from "../engine/components/Components";
+
+
+export class Player extends Component {
+  constructor() {
+    super('Player');
+  }
+}
+
+export class PlayerCannon extends Component {
+  constructor() {
+    super('Player_Cannon');
+  }
+}
+
+export function createPlayer(scene, world) {
+  const { width, height } = scene.scale;
+  const playerCircle = world.createEntity();
+  world.addComponent(playerCircle, new Transform(width / 2, height / 2, 0, 1));
+  world.addComponent(playerCircle, new CircleShape(20, 0xff0000));
+  world.addComponent(playerCircle, new Player());
+
+  const cannon = world.createEntity();
+  world.addComponent(cannon, new Transform(width / 2, height / 2, 0, 1, -1, 0));
+  world.addComponent(cannon, new RectShape(30, 10, 0xff0000));
+  world.addComponent(cannon, new PlayerCannon());
+}
+
+
+export class PlayerCannonSystem extends System {
+  constructor(scene) {
+    super();
     this.scene = scene;
-    this.x = x;
-    this.y = y;
-
-    this.cannonLength = 40;
-    this.cannonWidth = 10;
-
-    this.weapon = new Weapon(this.scene, 100, 5, 0xffff00, 3);
-
-    this.cannon = this.scene.add.graphics();
-
-    this.scene.input.on('pointerdown', () => {
-      this.weapon.startShooting();
-    });
-    this.scene.input.on('pointerup', () => {
-      this.weapon.stopShooting();
-    });
   }
 
-  update(time) {
+  update(world) {
     const pointer = this.scene.input.activePointer;
+    const cannon = world.getEntitiesWithComponent('Player_Cannon')[0];
 
-    this.angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.x, pointer.y);
+    const cannonTransform = world.getComponent(cannon, ComponentTypes.TRANSFORM);
+    const angle = Phaser.Math.Angle.Between(cannonTransform.x, cannonTransform.y, pointer.x, pointer.y);
 
-    this.cannon.clear();
-    this.cannon.fillStyle(0xff0000, 1);
+    cannonTransform.rotation = angle;
 
-    const offsetX = Math.sin(this.angle) * (this.cannonWidth / 2);
-    const offsetY = Math.cos(this.angle) * (this.cannonWidth / 2);
-    const x2 = this.x + Math.cos(this.angle) * this.cannonLength;
-    const y2 = this.y + Math.sin(this.angle) * this.cannonLength;
-
-    this.cannon.beginPath();
-    this.cannon.moveTo(this.x - offsetX, this.y + offsetY);
-    this.cannon.lineTo(this.x + offsetX, this.y - offsetY);
-    this.cannon.lineTo(x2 + offsetX, y2 - offsetY);
-    this.cannon.lineTo(x2 - offsetX, y2 + offsetY);
-    this.cannon.closePath();
-    this.cannon.fillPath();
-
-    this.weapon.update(time, this.x, this.y, this.angle, this.cannonLength);
   }
 }

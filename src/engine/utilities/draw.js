@@ -62,13 +62,14 @@ function drawRegularRectangle(graphics, transformX, transformY, pivotX, pivotY, 
   }
 }
 
+// Works for the prototype game, but pivot/rotation needs fixing...
 function drawRotatedRectangle(graphics, transformX, transformY, pivotX, pivotY, scaledWidth, scaledHeight, rotation, fillColor, strokeColor, strokeWidth) {
   const halfWidth = scaledWidth / 2;
   const halfHeight = scaledHeight / 2;
   const pivotOffsetX = (pivotX * scaledWidth) / 2;
   const pivotOffsetY = (pivotY * scaledHeight) / 2;
+  
   const angle = rotation;
-
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);
 
@@ -78,8 +79,8 @@ function drawRotatedRectangle(graphics, transformX, transformY, pivotX, pivotY, 
     { x: halfWidth - pivotOffsetX, y: halfHeight - pivotOffsetY },   // Bottom-right
     { x: -halfWidth - pivotOffsetX, y: halfHeight - pivotOffsetY },  // Bottom-left
   ].map((point) => ({
-    x: transformX + point.x * cos - point.y * sin,
-    y: transformY + point.x * sin + point.y * cos,
+    x: (point.x * cos - point.y * sin) + pivotOffsetX,
+    y: (point.x * sin + point.y * cos) + pivotOffsetY,
   }));
 
   if (fillColor !== null) {
