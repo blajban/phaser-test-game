@@ -1,3 +1,5 @@
+import { checkValidNumbers, validateNumbers } from "../utilities/validation";
+
 class ComponentMap {
   #components
   #componentType
@@ -19,9 +21,8 @@ class ComponentMap {
   }
 
   get(entity) {
-
     if (!this.has(entity)) {
-      throw new Error(`Could not find component of type ${this.#componentType} for entity ${entity}`);
+      return null;
 
     }
     return this.#components.get(entity);
@@ -29,13 +30,17 @@ class ComponentMap {
 
   delete(entity) {
     if (!this.has(entity)) {
-      throw new Error(`Could not find component of type ${this.#componentType} for entity ${entity}`);
+      throw new Error(`Could not delete component of type ${this.#componentType} for entity ${entity}`);
     }
     this.#components.delete(entity);
   }
 
   empty() {
     return this.#components.size === 0;
+  }
+
+  hasComponentType(componentType) {
+    return this.#componentType === componentType;
   }
 
   getEntitiesWithComponent() {
@@ -49,19 +54,25 @@ export default class ComponentStore {
     this.#componentTypes = new Map();
   }
 
-  addComponent(entity, component) {
+  registerComponent(component) {
     if (!this.#componentTypes.has(component.type)) {
+      console.log(component.type);
       this.#componentTypes.set(component.type, new ComponentMap(component.type));
     }
+  }
+
+  addComponent(entity, component) {
+    this.registerComponent(component);
 
     const componentMap = this.#componentTypes.get(component.type);
     componentMap.add(entity, component);
   }
 
   getComponent(entity, componentType) {
+    validateNumbers(entity);
     const componentMap = this.#componentTypes.get(componentType);
     if (!componentMap) {
-      throw new Error(`Component type ${componentType} does not exist`);
+      throw new Error(`Component type ${componentType} does not exist (get component)`);
     }
     return componentMap.get(entity);
   }
@@ -70,26 +81,22 @@ export default class ComponentStore {
     const componentMap = this.#componentTypes.get(componentType);
 
     if (!componentMap) {
-      throw new Error(`Component type ${componentType} does not exist`);
+      throw new Error(`Component type ${componentType} does not exist (remove component)`);
     }
 
     componentMap.delete(entity);
-
-    if (componentMap.empty()) {
-      this.#componentTypes.delete(componentType);
-    }
   }
 
   getEntitiesWithComponent(componentType) {
     const componentMap = this.#componentTypes.get(componentType);
-    
+  
     if (!componentMap) {
-      throw new Error(`Component type ${componentType} does not exist`);
+      throw new Error(`Component type ${componentType} does not exist (get entities with component)`);
     }
-
+  
     return componentMap.getEntitiesWithComponent();
   }
-
+  
   getAllComponentsForEntity(entity) {
     const components = {};
     for (const [componentType, componentMap] of this.#componentTypes.entries()) {
@@ -104,7 +111,7 @@ export default class ComponentStore {
     const entitySets = componentTypes.map((type) => {
       const componentMap = this.#componentTypes.get(type);
       if (!componentMap) {
-        throw new Error(`Component type ${type} does not exist`);
+        throw new Error(`Component type ${type} does not exist (get entities with archetype)`);
       }
       return new Set(componentMap.getEntitiesWithComponent());
     });

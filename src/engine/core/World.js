@@ -43,6 +43,10 @@ export default class World {
     return this.entityStore.entityIsValid(entity);
   }
 
+  registerComponent(component) {
+    this.componentStore.registerComponent(component);
+  }
+
   addComponent(entity, component) {
     if (!this.entityStore.entityIsValid(entity)) {
       throw new Error(`Entity ${entity} does not exist`);

@@ -2,9 +2,12 @@ import { checkValidNumbers, checkValidStrings, validateNumbers, validateStrings 
 
 export const ComponentTypes = {
   VELOCITY: 'Velocity',
-  CIRCLE_SHAPE: 'Circle_shape',
-  RECT_SHAPE: 'Rect_shape',
+  CIRCLE_SHAPE: 'CircleShape',
+  RECT_SHAPE: 'RectShape',
   TRANSFORM: 'Transform',
+  COLLIDER: 'Collider',
+  BOX_COLLIDER: 'BoxCollider',
+  CIRCLE_COLLIDER: 'CircleCollider'
 };
 
 export class Component {
@@ -64,5 +67,30 @@ export class RectShape extends Component {
     this.fillColor = fillColor;
     this.strokeColor = strokeColor;
     this.strokeWidth = strokeWidth;
+  }
+}
+
+export class Collider extends Component {
+  constructor(subType) {
+    super(ComponentTypes.COLLIDER);
+    validateStrings(subType);
+    this.subType = subType;
+  }
+}
+
+export class BoxCollider extends Collider {
+  constructor(width, height) {
+    super(ComponentTypes.BOX_COLLIDER);
+    validateNumbers(width, height);
+    this.width = width;
+    this.height = height;
+  }
+}
+
+export class CircleCollider extends Collider {
+  constructor(radius) {
+    super(ComponentTypes.CIRCLE_COLLIDER);
+    validateNumbers(radius);
+    this.radius = radius;
   }
 }

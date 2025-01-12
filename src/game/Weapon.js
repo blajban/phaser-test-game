@@ -1,4 +1,4 @@
-import { CircleShape, Component, ComponentTypes, Transform, Velocity } from "../engine/components/Components";
+import { CircleCollider, CircleShape, Component, ComponentTypes, Transform, Velocity } from "../engine/components/Components";
 import System from "../engine/systems/System";
 
 
@@ -11,18 +11,18 @@ export class Projectile extends Component {
 // Fix/remove error raising and handling
 function removeOutOfBounds(world, scene) {
   const { width, height } = scene.scale;
-  try {
-    const projectiles = world.getEntitiesWithComponent('Projectile');
-    for (const proj of projectiles) {
-      const transform = world.getComponent(proj, ComponentTypes.TRANSFORM);
-      if (
-        transform.x < 0 || transform.x > width ||
-        transform.y < 0 || transform.y > height
-      ) {
-        world.removeEntity(proj);
-      }
-    } 
-  } catch(err) {}
+
+  const projectiles = world.getEntitiesWithComponent('Projectile');
+  for (const proj of projectiles) {
+    const transform = world.getComponent(proj, ComponentTypes.TRANSFORM);
+    if (
+      transform.x < 0 || transform.x > width ||
+      transform.y < 0 || transform.y > height
+    ) {
+      world.removeEntity(proj);
+    }
+  } 
+
 }
 
 // refactor
@@ -30,7 +30,7 @@ function fireProjectile(world, scene, projRadius, projColor, projSpeed) {
   const pointer = scene.input.activePointer;
   const player = world.getEntitiesWithComponent('Player')[0];
   const playerTransform = world.getComponent(player, ComponentTypes.TRANSFORM);
-  const cannon = world.getEntitiesWithComponent('Player_Cannon')[0];
+  const cannon = world.getEntitiesWithComponent('PlayerCannon')[0];
   const cannonTransform = world.getComponent(cannon, ComponentTypes.TRANSFORM);
   const cannonShape = world.getComponent(cannon, ComponentTypes.RECT_SHAPE);
   const angle = Phaser.Math.Angle.Between(cannonTransform.x, cannonTransform.y, pointer.x, pointer.y);
@@ -40,6 +40,7 @@ function fireProjectile(world, scene, projRadius, projColor, projSpeed) {
       playerTransform.x + Math.cos(angle) * cannonShape.width,
       playerTransform.y + Math.sin(angle) * cannonShape.width),
     new CircleShape(projRadius, projColor),
+    new CircleCollider(projRadius),
     new Projectile()
   ]);
 

@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { CircleShape, Component, ComponentTypes, Transform, Velocity } from "../engine/components/Components";
+import { CircleCollider, CircleShape, Component, ComponentTypes, Transform, Velocity } from "../engine/components/Components";
 import System from "../engine/systems/System";
 
 export class Enemy extends Component {
@@ -12,6 +12,7 @@ export function createEnemy(world, x, y, targetX, targetY, radius, color, speed)
   const enemy = world.createEntity();
   world.addComponent(enemy, new Transform(x, y));
   world.addComponent(enemy, new CircleShape(radius, color));
+  world.addComponent(enemy, new CircleCollider(radius));
   const angle = Phaser.Math.Angle.Between(x, y, targetX, targetY);
   const vx = Math.cos(angle) * speed;
   const vy = Math.sin(angle) * speed;

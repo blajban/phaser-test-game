@@ -9,13 +9,8 @@ export class GraphicsRenderSystem extends System {
   }
 
   update(world) {
-    try {
-      this.renderRectangles(world);
-    } catch(err) {}
-    
-    try {
-      this.renderCircles(world);
-    } catch (err) {}
+    this.renderRectangles(world);
+    this.renderCircles(world);
     
     cleanupGraphics(world.getAllEntities());
   }
