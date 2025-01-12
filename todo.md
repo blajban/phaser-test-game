@@ -1,4 +1,3 @@
-* Enemy Spawner
 * collisions, damage, health
 * change error handling, let user check if components exist instead of raising error? Require components to be registered before use?
 

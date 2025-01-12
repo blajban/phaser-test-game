@@ -1,11 +1,10 @@
 import Phaser from "phaser";
 import { createPlayer, PlayerCannonSystem } from "../game/Player";
-import EnemySpawner from "../game/EnemySpawner";
-import { ComponentTypes } from "../engine/components/Components";
 import World from "../engine/core/World";
 import { GraphicsRenderSystem } from "../engine/systems/GraphicsRenderSystem";
-import { fireProjectile, WeaponSystem } from "../game/Weapon";
+import { WeaponSystem } from "../game/Weapon";
 import MovementSystem from "../engine/systems/MovementSystem";
+import { EnemySpawnerSystem } from "../game/Enemy";
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -19,6 +18,7 @@ class MainScene extends Phaser.Scene {
     this.world.addSystem(new MovementSystem(this));
     this.weaponSystem = new WeaponSystem(this, 100, 6, 0x00ff00, 40);
     this.world.addSystem(this.weaponSystem);
+    this.world.addSystem(new EnemySpawnerSystem(this, 3000));
   }
 
   create() {
@@ -30,9 +30,6 @@ class MainScene extends Phaser.Scene {
     this.input.on('pointerup', () => {
       this.weaponSystem.stopShooting();
     });
-
-    // Old
-    //this.enemySpawner = new EnemySpawner(this, 300, 400);
   }
 
   update(time, delta) {
@@ -40,6 +37,7 @@ class MainScene extends Phaser.Scene {
 
     //const entities = this.world.getAllEntities();
     //console.log(entities);
+    //console.log(entities.length);
     //this.enemySpawner.update(time);
   }
 }
