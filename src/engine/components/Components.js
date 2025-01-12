@@ -1,4 +1,4 @@
-import { checkValidNumbers, checkValidStrings } from "../utilities/validation";
+import { checkValidNumbers, checkValidStrings, validateNumbers, validateStrings } from "../utilities/validation";
 
 export const ComponentTypes = {
   VELOCITY: 'Velocity',
@@ -9,7 +9,7 @@ export const ComponentTypes = {
 
 export class Component {
   constructor(type) {
-    checkValidStrings(type);
+    validateStrings(type);
     this.type = type;
   }
 }
@@ -17,7 +17,7 @@ export class Component {
 export class Transform extends Component {
   constructor(x = 0, y = 0, rotation = 0, scale = 1, pivotX = 0, pivotY = 0) {
     super(ComponentTypes.TRANSFORM);
-    checkValidNumbers(x, y, rotation, scale);
+    validateNumbers(x, y, rotation, scale);
     
     this.x = x;
     this.y = y;
@@ -31,7 +31,7 @@ export class Transform extends Component {
 export class Velocity extends Component {
   constructor(vx = 0, vy = 0) {
     super(ComponentTypes.VELOCITY);
-    checkValidNumbers(vx, vy);
+    validateNumbers(vx, vy);
     
     this.vx = vx;
     this.vy = vy;
@@ -41,9 +41,9 @@ export class Velocity extends Component {
 export class CircleShape extends Component {
   constructor(radius, fillColor = null, strokeColor = null, strokeWidth = 0) {
     super(ComponentTypes.CIRCLE_SHAPE);
-    checkValidNumbers(radius, strokeWidth);
-    if (fillColor !== null) checkValidNumbers(fillColor);
-    if (strokeColor !== null) checkValidNumbers(strokeColor);
+    validateNumbers(radius, strokeWidth);
+    if (fillColor !== null) validateNumbers(fillColor);
+    if (strokeColor !== null) validateNumbers(strokeColor);
     
     this.radius = radius;
     this.fillColor = fillColor;
@@ -55,9 +55,9 @@ export class CircleShape extends Component {
 export class RectShape extends Component {
   constructor(width, height, fillColor = null, strokeColor = null, strokeWidth = 0) {
     super(ComponentTypes.RECT_SHAPE);
-    checkValidNumbers(width, height, strokeWidth);
-    if (fillColor !== null) checkValidNumbers(fillColor);
-    if (strokeColor !== null) checkValidNumbers(strokeColor);
+    validateNumbers(width, height, strokeWidth);
+    if (fillColor !== null) validateNumbers(fillColor);
+    if (strokeColor !== null) validateNumbers(strokeColor);
 
     this.width = width;
     this.height = height;
