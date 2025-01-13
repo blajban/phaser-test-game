@@ -1,10 +1,14 @@
 import { CircleCollider, CircleShape, Component, ComponentTypes, Transform, Velocity } from "../engine/components/Components";
 import System from "../engine/systems/System";
+import { validateNumbers } from "../engine/utilities/validation";
+import { CustomComponentTypes } from "../scenes/MainScene";
 
 
 export class Projectile extends Component {
-  constructor() {
-    super('Projectile');
+  constructor(dmg) {
+    super(CustomComponentTypes.PROJECTILE);
+    validateNumbers(dmg);
+    this.dmg = dmg;
   }
 }
 
@@ -18,7 +22,7 @@ function removeOutOfBounds(world, scene) {
     if (
       transform.x < 0 || transform.x > width ||
       transform.y < 0 || transform.y > height
-    ) {
+    ) {Projectile
       world.removeEntity(proj);
     }
   } 
@@ -41,7 +45,7 @@ function fireProjectile(world, scene, projRadius, projColor, projSpeed) {
       playerTransform.y + Math.sin(angle) * cannonShape.width),
     new CircleShape(projRadius, projColor),
     new CircleCollider(projRadius),
-    new Projectile()
+    new Projectile(1)
   ]);
 
   const vx = Math.cos(angle) * projSpeed;

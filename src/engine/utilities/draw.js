@@ -1,4 +1,42 @@
 const graphicsMap = new Map();
+const textMap = new Map();
+
+
+
+export function destroyText(entity) {
+  if (textMap.has(entity)) {
+    textMap.get(entity).destroy();
+    textMap.delete(entity);
+  }
+}
+
+export function cleanupText(validEntities) {
+  for (const [entity, text] of textMap.entries()) {
+    if (!validEntities.includes(entity)) {
+      text.destroy();
+      textMap.delete(entity);
+    }
+  }
+}
+
+export function drawText(scene, entity, transformX, transformY, text, fontSize, color) {
+  if (!textMap.has(entity)) {
+    const phaserText = scene.add.text(
+      transformX,
+      transformY,
+      text,
+      {
+        fontSize: fontSize,
+        color: color,
+      }
+    );
+    textMap.set(entity, phaserText);
+  }
+
+  const phaserText = textMap.get(entity);
+  phaserText.setText(text);
+  phaserText.setPosition(transformX, transformY);
+}
 
 export function getGraphics(scene, entity) {
   if (!graphicsMap.has(entity)) {
@@ -62,7 +100,7 @@ function drawRegularRectangle(graphics, transformX, transformY, pivotX, pivotY, 
   }
 }
 
-// Works for the prototype game, but pivot/rotation needs fixing...
+// Works for the prototype game, but pivot/rotation needs fixing... (why isnt the transform used? :D)
 function drawRotatedRectangle(graphics, transformX, transformY, pivotX, pivotY, scaledWidth, scaledHeight, rotation, fillColor, strokeColor, strokeWidth) {
   const halfWidth = scaledWidth / 2;
   const halfHeight = scaledHeight / 2;

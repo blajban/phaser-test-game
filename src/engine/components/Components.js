@@ -7,7 +7,9 @@ export const ComponentTypes = {
   TRANSFORM: 'Transform',
   COLLIDER: 'Collider',
   BOX_COLLIDER: 'BoxCollider',
-  CIRCLE_COLLIDER: 'CircleCollider'
+  CIRCLE_COLLIDER: 'CircleCollider',
+  TEXT: 'Text',
+  PARTICLE: 'Particle'
 };
 
 export class Component {
@@ -92,5 +94,27 @@ export class CircleCollider extends Collider {
     super(ComponentTypes.CIRCLE_COLLIDER);
     validateNumbers(radius);
     this.radius = radius;
+  }
+}
+
+export class Text extends Component {
+  constructor(text, fontSize = '24px', color = '#ffffff') {
+    super(ComponentTypes.TEXT);
+    validateStrings(text, fontSize, color);
+    this.text = text;
+    this.fontSize = fontSize;
+    this.color = color;
+  }
+}
+
+// using phaser config
+export class Particle extends Component {
+  constructor(texture, lifespan, config) {
+    super(ComponentTypes.PARTICLE);
+    this.texture = texture;
+    this.lifespan = lifespan;
+    this.config = config;
+    this.elapsed = 0;
+    this.active = false;
   }
 }

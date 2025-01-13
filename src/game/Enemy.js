@@ -1,14 +1,19 @@
 import Phaser from "phaser";
-import { CircleCollider, CircleShape, Component, ComponentTypes, Transform, Velocity } from "../engine/components/Components";
+import { CircleCollider, CircleShape, Component, ComponentTypes, Particle, Transform, Velocity } from "../engine/components/Components";
 import System from "../engine/systems/System";
+import { validateNumbers } from "../engine/utilities/validation";
+import { CustomComponentTypes } from "../scenes/MainScene";
 
 export class Enemy extends Component {
-  constructor() {
-    super('Enemy');
+  constructor(hp, dmg) {
+    super(CustomComponentTypes.ENEMY);
+    validateNumbers(hp, dmg);
+    this.hp = hp;
+    this.dmg = dmg;
   }
 }
 
-export function createEnemy(world, x, y, targetX, targetY, radius, color, speed) {
+export function createEnemy(world, x, y, targetX, targetY, radius, color, speed, hp, dmg) {
   const enemy = world.createEntity();
   world.addComponent(enemy, new Transform(x, y));
   world.addComponent(enemy, new CircleShape(radius, color));
@@ -17,7 +22,15 @@ export function createEnemy(world, x, y, targetX, targetY, radius, color, speed)
   const vx = Math.cos(angle) * speed;
   const vy = Math.sin(angle) * speed;
   world.addComponent(enemy, new Velocity(vx, vy));
-  world.addComponent(enemy, new Enemy());
+  world.addComponent(enemy, new Enemy(hp, dmg));
+  world.addComponent(enemy, new Particle('particle', 6000, {
+    speed: { min: -100, max: 100 },
+    scale: { start: 0.3, end: 0.2 },
+    lifespan: 700,
+    quantity: 30,
+    blendMode: 'ADD',
+    emitting: false
+  }));
 }
 
 function spawnEnemy(world, scene) {
@@ -48,7 +61,7 @@ function spawnEnemy(world, scene) {
   const player = world.getEntitiesWithComponent('Player')[0];
   const playerTransform = world.getComponent(player, ComponentTypes.TRANSFORM);
 
-  createEnemy(world, x, y, playerTransform.x, playerTransform.y, 10, 0x00ffff, 10);
+  createEnemy(world, x, y, playerTransform.x, playerTransform.y, 10, 0x00ffff, 10, 10, 2);
 }
 
 export class EnemySpawnerSystem extends System {
@@ -65,9 +78,6 @@ export class EnemySpawnerSystem extends System {
       spawnEnemy(world, this.scene);
       this.lastSpawnTime = time;
     }
-    
-
-    // Handle collisions
   }
 }
 
