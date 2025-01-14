@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
+import AnotherScene from './scenes/AnotherScene';
 
 if (window.game) {
   console.log('Game already initialized');

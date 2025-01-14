@@ -11,6 +11,7 @@ function projectileHitEnemy(world, projectileEntity, enemyEntity) {
     particleComponent.active = true;
 
     world.removeComponent(enemyEntity, CustomComponentTypes.ENEMY);
+    world.removeComponent(enemyEntity, ComponentTypes.VELOCITY);
 
     const scoreEntity = world.getEntitiesWithComponent(CustomComponentTypes.SCORE)[0];
     const scoreComponent = world.getComponent(scoreEntity, CustomComponentTypes.SCORE);
